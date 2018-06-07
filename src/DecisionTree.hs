@@ -1,4 +1,4 @@
-module MatrixTest where
+module DecisionTree where
 
 import Data.Function    ((&))
 import Foreign.Storable (Storable)
