@@ -46,12 +46,12 @@ informationGain featureVector resultVector =
 
         vecLen vec = fromIntegral (V.length vec)
 
-        entropies =
+        weightedEntropies =
             groupedResults
                 & M.elems
                 & map (\v -> (vecLen v / n) * entropy v)
         in
-            sum entropies
+            sum weightedEntropies
 
 groupByVector :: (Ord a, Storable a, Storable b) => Vector a -> Vector b -> Map a (Vector b)
 groupByVector groupingVector targetVector =
