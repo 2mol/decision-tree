@@ -38,11 +38,20 @@ count vec = V.foldl countHelper M.empty vec
 informationGain :: (Ord a, Storable a) => Vector a -> Vector a -> Double
 informationGain featureVector resultVector =
     let
-        bla =
-            count featureVector
-                -- & M.mapWithKey (\k a -> )
+        groupedResults =
+            groupByVector featureVector resultVector
+
+        n =
+            fromIntegral $ V.length featureVector
+
+        vecLen vec = fromIntegral (V.length vec)
+
+        entropies =
+            groupedResults
+                & M.elems
+                & map (\v -> (vecLen v / n) * entropy v)
         in
-            0.0
+            sum entropies
 
 groupByVector :: (Ord a, Storable a, Storable b) => Vector a -> Vector b -> Map a (Vector b)
 groupByVector groupingVector targetVector =
@@ -62,7 +71,3 @@ indicesMap vec =
 
 indicesHelper :: Ord a => Map a [Int] -> Int -> a -> Map a [Int]
 indicesHelper indicesDict i el = M.insertWith (++) el [i] indicesDict
-
--- filterSlice :: (Ord a, Storable a) => Vector a -> a -> Vector a -> Vector a
--- filterSlice filterVector filterElement targetVector =
---     V.imap f filterVector
