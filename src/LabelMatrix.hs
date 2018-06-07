@@ -24,8 +24,8 @@ data LabelMatrix a r c =
         , cols   :: Vector c
         } deriving (Show)
 
-groupByRow :: LabelMatrix a r c -> r -> Map r (LabelMatrix a r c)
+groupByRow :: LabelMatrix a r c -> r -> Map a (LabelMatrix a r c)
 groupByRow = undefined
 
-groupByColumn :: LabelMatrix a r c -> c -> Map c (LabelMatrix a r c)
+groupByColumn :: LabelMatrix a r c -> c -> Map a (LabelMatrix a r c)
 groupByColumn = undefined

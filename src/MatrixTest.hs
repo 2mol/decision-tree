@@ -5,6 +5,8 @@ import Foreign.Storable (Storable)
 
 import           Data.Map              (Map)
 import qualified Data.Map              as M
+-- import           Data.Set              (Set)
+-- import qualified Data.Set              as S
 import qualified Data.Vector.Storable  as V
 import           Numeric.LinearAlgebra
 
@@ -13,10 +15,11 @@ import           Numeric.LinearAlgebra
 entropy :: (Ord a, Storable a) => Vector a -> Double
 entropy vec =
     let
-        n = fromIntegral $ V.length vec
+        n =
+            fromIntegral $ V.length vec
 
         proportions =
-            V.foldl counter M.empty vec
+            count vec
                 & M.elems
                 & map fromIntegral
                 & map (\x -> x / n)
@@ -26,8 +29,40 @@ entropy vec =
     in
         sum entropies
 
-counter :: Ord a => Map a Int -> a -> Map a Int
-counter countDict el = M.insertWith (+) el 1 countDict
+countHelper :: Ord a => Map a Int -> a -> Map a Int
+countHelper countDict el = M.insertWith (+) el 1 countDict
 
--- informationGain :: (Ord a, Storable a) => Vector a -> Vector a -> Double
--- informationGain = undefined
+count :: (Ord a, Storable a) => Vector a -> Map a Int
+count vec = V.foldl countHelper M.empty vec
+
+informationGain :: (Ord a, Storable a) => Vector a -> Vector a -> Double
+informationGain featureVector resultVector =
+    let
+        bla =
+            count featureVector
+                -- & M.mapWithKey (\k a -> )
+        in
+            0.0
+
+groupByVector :: (Ord a, Storable a, Storable b) => Vector a -> Vector b -> Map a (Vector b)
+groupByVector groupingVector targetVector =
+    let
+        groupedIndices =
+            indicesMap groupingVector
+
+        getAtIndices vec indices =
+            V.ifilter (\i _ -> elem i indices) vec
+    in
+        groupedIndices
+            & M.map (getAtIndices targetVector)
+
+indicesMap :: (Ord a, Storable a) => Vector a -> Map a [Int]
+indicesMap vec =
+    V.ifoldl indicesHelper M.empty vec
+
+indicesHelper :: Ord a => Map a [Int] -> Int -> a -> Map a [Int]
+indicesHelper indicesDict i el = M.insertWith (++) el [i] indicesDict
+
+-- filterSlice :: (Ord a, Storable a) => Vector a -> a -> Vector a -> Vector a
+-- filterSlice filterVector filterElement targetVector =
+--     V.imap f filterVector
