@@ -17,6 +17,8 @@ Provides similar convenience functions to pandas DataFrames. Contrary to the lat
 elements in the matrix contain only one type.
 -}
 
+--bla = ((12><12) [0..] :: Matrix I) #> fromList [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0] :: Vector I
+
 data LabelMatrix a r c =
     LabelMatrix
         { matrix :: Matrix a

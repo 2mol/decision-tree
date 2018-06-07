@@ -5,12 +5,14 @@ import Foreign.Storable (Storable)
 
 import           Data.Map              (Map)
 import qualified Data.Map              as M
--- import           Data.Set              (Set)
--- import qualified Data.Set              as S
 import qualified Data.Vector.Storable  as V
 import           Numeric.LinearAlgebra
 
---bla = ((12><12) [0..] :: Matrix I) #> fromList [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0] :: Vector I
+{-
+let v = fromList [0, 0, 1, 0, 0, 1, 0, 0, 2, 2, 0, 2] :: Vector I
+
+entropy v
+-}
 
 entropy :: (Ord a, Storable a) => Vector a -> Double
 entropy vec =
@@ -34,6 +36,13 @@ countHelper countDict el = M.insertWith (+) el 1 countDict
 
 count :: (Ord a, Storable a) => Vector a -> Map a Int
 count vec = V.foldl countHelper M.empty vec
+
+{-
+let v1 = fromList [0, 0, 1, 0, 0, 1, 0, 0, 2, 2, 0, 2] :: Vector I
+let v2 = fromList [1, 2, 3, 4, 5, 5, 3, 5, 6, 8, 9, 5] :: Vector I
+
+informationGain v1 v2
+-}
 
 informationGain :: (Ord a, Storable a) => Vector a -> Vector a -> Double
 informationGain featureVector resultVector =
