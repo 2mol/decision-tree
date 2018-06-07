@@ -27,7 +27,7 @@ entropy vec =
         sum entropies
 
 counter :: Ord a => Map a Int -> a -> Map a Int
-counter d el = M.insertWith (+) el 1 d
+counter countDict el = M.insertWith (+) el 1 countDict
 
-informationGain :: (Ord a, Storable a) => Vector a -> Vector a -> Double
-informationGain = undefined
+-- informationGain :: (Ord a, Storable a) => Vector a -> Vector a -> Double
+-- informationGain = undefined
