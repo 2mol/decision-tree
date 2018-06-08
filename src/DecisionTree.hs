@@ -1,12 +1,12 @@
 module DecisionTree where
 
 import Data.Function    ((&))
-import Foreign.Storable (Storable)
+-- import Foreign.Storable (Storable)
 
 import           Data.Map              (Map)
 import qualified Data.Map              as M
-import qualified Data.Vector.Storable  as V
-import           Numeric.LinearAlgebra
+import qualified Data.Vector  as V
+-- import           Numeric.LinearAlgebra
 
 {-
 let v = fromList [0, 0, 1, 0, 0, 1, 0, 0, 2, 2, 0, 2] :: Vector I
@@ -14,7 +14,7 @@ let v = fromList [0, 0, 1, 0, 0, 1, 0, 0, 2, 2, 0, 2] :: Vector I
 entropy v
 -}
 
-entropy :: (Ord a, Storable a) => Vector a -> Double
+entropy :: Ord a => V.Vector a -> Double
 entropy vec =
     let
         n =
@@ -34,7 +34,7 @@ entropy vec =
 countHelper :: Ord a => Map a Int -> a -> Map a Int
 countHelper countDict el = M.insertWith (+) el 1 countDict
 
-count :: (Ord a, Storable a) => Vector a -> Map a Int
+count :: Ord a => V.Vector a -> Map a Int
 count vec = V.foldl countHelper M.empty vec
 
 {-
@@ -44,7 +44,7 @@ let v2 = fromList [1, 2, 3, 4, 5, 5, 3, 5, 6, 8, 9, 5] :: Vector I
 informationGain v1 v2
 -}
 
-informationGain :: (Ord a, Storable a) => Vector a -> Vector a -> Double
+informationGain :: Ord a => V.Vector a -> V.Vector a -> Double
 informationGain featureVector resultVector =
     let
         groupedResults =
@@ -62,7 +62,7 @@ informationGain featureVector resultVector =
         in
             sum weightedEntropies
 
-groupByVector :: (Ord a, Storable a, Storable b) => Vector a -> Vector b -> Map a (Vector b)
+groupByVector :: Ord a => V.Vector a -> V.Vector b -> Map a (V.Vector b)
 groupByVector groupingVector targetVector =
     let
         groupedIndices =
@@ -74,7 +74,7 @@ groupByVector groupingVector targetVector =
         groupedIndices
             & M.map (getAtIndices targetVector)
 
-indicesMap :: (Ord a, Storable a) => Vector a -> Map a [Int]
+indicesMap :: Ord a => V.Vector a -> Map a [Int]
 indicesMap vec =
     V.ifoldl indicesHelper M.empty vec
 
