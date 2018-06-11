@@ -3,8 +3,8 @@ module DecisionTree where
 import Data.Function    ((&))
 import Foreign.Storable (Storable)
 
-import           Data.Map              (Map)
-import qualified Data.Map              as M
+import           Data.Map.Strict              (Map)
+import qualified Data.Map.Strict              as M
 import qualified Data.Vector.Storable  as V
 import           Numeric.LinearAlgebra
 
@@ -92,4 +92,5 @@ indicesMap vec =
     V.ifoldl indicesHelper M.empty vec
 
 indicesHelper :: Ord a => Map a [Int] -> Int -> a -> Map a [Int]
-indicesHelper indicesDict i el = M.insertWith (++) el [i] indicesDict
+indicesHelper indicesDict i el =
+    M.insertWith (++) el [i] indicesDict
