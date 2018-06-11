@@ -39,23 +39,17 @@ fromList content rowLabels columnLabels =
     in
         LabelMatrix mat (V.fromList rowLabels) (V.fromList columnLabels)
 
+{-
+v = m ¿ [0] -- extract column(s)
+
+flatten v -- makes it into a vector, especially nice if the matrix is nx1 anyway.
+-}
+
 groupBy :: LabelMatrix a r c -> r -> Map a (LabelMatrix a r c)
-groupBy = undefined
+groupBy = groupByRow
 
 groupByRow :: LabelMatrix a r c -> r -> Map a (LabelMatrix a r c)
 groupByRow = undefined
-
--- groupByVector :: (Ord a, Storable a, Storable b) => Vector a -> Vector b -> Map a (Vector b)
--- groupByVector groupingVector targetVector =
---     let
---         groupedIndices =
---             indicesMap groupingVector
-
---         getAtIndices vec indices =
---             V.ifilter (\i _ -> elem i indices) vec
---     in
---         groupedIndices
---             & M.map (getAtIndices targetVector)
 
 groupByColumn :: LabelMatrix a r c -> c -> Map a (LabelMatrix a r c)
 groupByColumn = undefined

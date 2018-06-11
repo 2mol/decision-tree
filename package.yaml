@@ -24,6 +24,7 @@ dependencies:
 - containers
 - vector
 - hmatrix
+- massiv
 
 library:
   source-dirs: src
