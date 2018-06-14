@@ -26,10 +26,13 @@ entropy vec =
                 & map fromIntegral
                 & map (\x -> x / n)
 
-        entropies =
+        componentEntropies =
             [ -p * logBase 2 p | p <- proportions ]
     in
-        sum entropies
+        sum componentEntropies
+
+-- entropies :: (Ord a, Storable a) => Matrix a -> Int -> Double
+-- entropies mat colIndex
 
 countHelper :: Ord a => Map a Int -> a -> Map a Int
 countHelper countDict el = M.insertWith (+) el 1 countDict
@@ -85,7 +88,7 @@ groupBy mat columnIndex =
             indicesMap groupingVector
     in
         groupedIndices
-            & M.map (\v -> mat ? v)
+            & M.map (\v -> removeColumn (mat ? v) columnIndex)
 
 indicesMap :: (Ord a, Storable a) => Vector a -> Map a [Int]
 indicesMap vec =
@@ -94,3 +97,11 @@ indicesMap vec =
 indicesHelper :: Ord a => Map a [Int] -> Int -> a -> Map a [Int]
 indicesHelper indicesDict i el =
     M.insertWith (++) el [i] indicesDict
+
+removeColumn :: (Element a) => Matrix a -> Int -> Matrix a
+removeColumn m i =
+    let
+        m1 = m ?? (All, Take i)
+        m2 = m ?? (All, Drop (i+1))
+    in
+    m1 ||| m2
