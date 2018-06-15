@@ -67,10 +67,10 @@ informationGain featureVector resultVector =
 informationGains :: Matrix I -> [Double]
 informationGains mat =
     let
-        cols = N.toColumns mat
-        featureVector = lastColumn
+        columns = N.toColumns mat
+        featureVector = lastColumn mat
     in
-        map (informationGain featureVector) cols
+        map (informationGain featureVector) columns
 
 
 groupByVector :: (Storable a, Storable b, Ord a) => Vector a -> Vector b -> Map a (Vector b)
