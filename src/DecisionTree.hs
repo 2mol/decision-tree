@@ -3,10 +3,11 @@ module DecisionTree where
 import Data.Function    ((&))
 import Foreign.Storable (Storable)
 
-import           Data.Map.Strict              (Map)
-import qualified Data.Map.Strict              as M
-import qualified Data.Vector.Storable  as V
+import           Data.Map.Strict            (Map)
+import qualified Data.Map.Strict            as M
+import qualified Data.Vector.Storable       as V
 import           Numeric.LinearAlgebra
+import           Numeric.LinearAlgebra.Data as N
 
 {-
 let v = fromList [0, 0, 1, 0, 0, 1, 0, 0, 2, 2, 0, 2] :: Vector I
@@ -30,9 +31,6 @@ entropy vec =
             [ -p * logBase 2 p | p <- proportions ]
     in
         sum componentEntropies
-
--- entropies :: (Ord a, Storable a) => Matrix a -> Int -> Double
--- entropies mat colIndex
 
 countHelper :: Ord a => Map a Int -> a -> Map a Int
 countHelper countDict el = M.insertWith (+) el 1 countDict
@@ -64,6 +62,16 @@ informationGain featureVector resultVector =
                 & map (\v -> (vecLen v / n) * entropy v)
         in
             sum weightedEntropies
+
+
+informationGains :: Matrix I -> [Double]
+informationGains mat =
+    let
+        cols = N.toColumns mat
+        featureVector = lastColumn
+    in
+        map (informationGain featureVector) cols
+
 
 groupByVector :: (Storable a, Storable b, Ord a) => Vector a -> Vector b -> Map a (Vector b)
 groupByVector groupingVector targetVector =
@@ -105,3 +113,8 @@ removeColumn m i =
         m2 = m ?? (All, Drop (i+1))
     in
     m1 ||| m2
+
+lastColumn :: Matrix I -> Vector I
+lastColumn m =
+    let (_, width) = size m
+    in flatten $ m ¿ [width-1]
